@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+mydir=$(dirname $(readlink -f "$0"))
+cd "$mydir"
+source helpers.sh
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 collection"
+  echo "collection - to configure in zookeeper and to create/update in Solr"
+  echo "  there must be a directory \$collection-config containing a single"
+  echo "  config directory containing at least solrconfig.xml and schema.xml"
+  exit 1
+fi
+col="$1"
+
+isEmpty ZKROOT must be either _ or a zk-root like host:port/some/path, whereby the _ assumes Solr is running on its internal zookeeper on localhost:9983
+ZKROOT=$(getZk)
+
+## TODO: don't upload emacs or vi backup files
+
+solr zk upconfig -d "./$col-config" -n "$col" -z "$ZKROOT"
+url="http://localhost:8983/solr/admin/collections"
+if  curl "$url?action=list" |grep "$col"; then
+  curl "$url?name=$col&action=reload"
+else
+  curl "$url?action=create&name=$col&numShards=4&replicationFactor=1&maxShardsPerNode=4&collection.configName=$col"
+fi
+
+
+
