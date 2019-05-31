@@ -17,7 +17,6 @@ initSolrFile() {
 }
 
 isEmpty() {
-set -x
   local varname="$1"
   local varvalue="${!varname}"
   if [ -z "$varvalue" ]; then

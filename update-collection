@@ -6,8 +6,8 @@ source "$mydir/helpers.sh"
 if [ "$#" -ne 1 ]; then
   echo "usage: $0 collection"
   echo "collection - to configure in zookeeper and to create/update in Solr"
-  echo "  there must be a directory \$collection-config containing a single"
-  echo "  config directory containing at least solrconfig.xml and schema.xml"
+  echo "  there must be a directory \${collection}-config containing a single"
+  echo "  config directory with at least solrconfig.xml and schema.xml"
   exit 1
 fi
 col="$1"
